@@ -1,0 +1,318 @@
+{
+	"info": {
+		"_postman_id": "3ac2062a-6287-45cf-8dcb-f284d58885df",
+		"name": "trello with file uploading",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26858537"
+	},
+	"item": [
+		{
+			"name": "create board Copy",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"board name\",\"board\"+Date.now());"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsondata=pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check board has an id\",function(){\r",
+							"    pm.expect(jsondata.id).is.not.oneOf([null,undefined]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check board has a name\",function(){\r",
+							"    pm.expect(jsondata.name).to.eql(pm.environment.get(\"board name\"));\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"boardid\",jsondata.id)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{urltrello}}boards?name={{board name}}&token={{tokentrello}}&key={{appkey}}&defaultLists=false",
+					"host": [
+						"{{urltrello}}boards"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{board name}}"
+						},
+						{
+							"key": "token",
+							"value": "{{tokentrello}}"
+						},
+						{
+							"key": "key",
+							"value": "{{appkey}}"
+						},
+						{
+							"key": "defaultLists",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create list Copy",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"list name\",\"list\"+ Date.now());"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsondata=pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check list has an id\",function(){\r",
+							"    pm.expect(jsondata.id).is.not.oneOf([null,undefined]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check list has a name\",function(){\r",
+							"    pm.expect(jsondata.name).to.eql(pm.environment.get(\"list name\"));\r",
+							"});\r",
+							"pm.environment.set(\"listid\",jsondata.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{urltrello}}lists?key={{appkey}}&token={{tokentrello}}&idBoard={{boardid}}&name={{list name}}",
+					"host": [
+						"{{urltrello}}lists"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{appkey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{tokentrello}}"
+						},
+						{
+							"key": "idBoard",
+							"value": "{{boardid}}"
+						},
+						{
+							"key": "name",
+							"value": "{{list name}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "creat card Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsondata=pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check card has an id\",function(){\r",
+							"    pm.expect(jsondata.id).is.not.oneOf([null,undefined]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check card has a name\",function(){\r",
+							"    pm.expect(jsondata.name).to.eql(pm.environment.get(\"card name\"));\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"card name\",\"card\"+Date.now());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/YeHya/Desktop/test/Api/QA Cart/project/newman/datadriven.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{urltrello}}cards?key={{appkey}}&token={{tokentrello}}&idList={{listid}}&name=",
+					"host": [
+						"{{urltrello}}cards"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{appkey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{tokentrello}}"
+						},
+						{
+							"key": "idList",
+							"value": "{{listid}}"
+						},
+						{
+							"key": "name",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "archived list Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const jsondata=pm.response.json();\r",
+							"\r",
+							"pm.test(\"check list closed\",function(){\r",
+							"\r",
+							"pm.expect(jsondata.closed).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{urltrello}}lists/{{listid}}/closed?key={{appkey}}&token={{tokentrello}}&value=true",
+					"host": [
+						"{{urltrello}}lists"
+					],
+					"path": [
+						"{{listid}}",
+						"closed"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{appkey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{tokentrello}}"
+						},
+						{
+							"key": "value",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete board Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const jsondata=pm.response.json();\r",
+							"\r",
+							"pm.test(\"board deleted\", function () {\r",
+							"    pm.expect(jsondata.value).is.oneOf([null,undefined]);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{urltrello}}boards/{{boardid}}?key={{appkey}}&token={{tokentrello}}",
+					"host": [
+						"{{urltrello}}boards"
+					],
+					"path": [
+						"{{boardid}}"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{appkey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{tokentrello}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
